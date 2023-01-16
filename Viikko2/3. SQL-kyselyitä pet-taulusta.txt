@@ -1,0 +1,20 @@
+a) Poista Puffballin tiedot taulusta.
+mysql> DELETE FROM pet where name='Puffball';
+
+b) Muuta Bowserin syntymäajaksi 31.8.1998
+mysql> UPDATE pet SET birth = '1998-08-31' WHERE name = 'Bowser';
+
+c) Chirpy on kuollut 15.9.2000. Lisää tämä tieto tauluun.
+UPDATE pet SET death = '2000-09-15' WHERE name = 'Chirpy';
+
+d) Tulosta kaikki lemmikit, jotka ovat syntyneet 1990-luvulla. (Tulosta kaikki tietueen tiedot)
+mysql> select * FROM pet WHERE birth >= '1990-01-01';
+
+e) Tulosta kaikki miespuoliset koirat. (Tulosta kaikki tietueen tiedot)
+mysql> select * FROM pet WHERE sex = 'm' AND species = 'dog';
+
+f) Tulosta ainoastaan kaikkien miespuolisten koirien nimet.
+mysql> SELECT name FROM pet WHERE sex = 'm' AND species = 'dog';
+
+g) Tulosta kaikkien miespuolisten koirien nimi ja omistajan nimi.
+mysql> SELECT name, owner FROM pet WHERE sex = 'm' AND species = 'dog';
