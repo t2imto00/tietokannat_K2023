@@ -1,0 +1,23 @@
+Muuta aikaisemmin tehdyn pet-taulun rakenne oppimateriaalissa esitetyn kaltaiseksi, 
+eli meillä on kaksi taulua, pet ja owner ja niiden välillä yhdestä moneen-yhteys.
+
+Esitä vastauksessasi tarvittavat SQL-lauseet sekä taulujen rakenne DESC-lauseella.
+
+---------------------------------------------------------------------------------------
+
+mysql> ALTER TABLE pet ADD COLUMN ownerID INT;
+mysql> ALTER TABLE pet ADD CONSTRAINT FOREIGN KEY(ownerID) REFERENCES 
+owner(ownerID);
+
+DESC pet;
++---------+-------------+------+-----+---------+----------------+
+| Field   | Type        | Null | Key | Default | Extra          |
++---------+-------------+------+-----+---------+----------------+
+| name    | varchar(20) | YES  |     | NULL    |                |
+| species | varchar(20) | YES  |     | NULL    |                |
+| sex     | char(1)     | YES  |     | NULL    |                |
+| birth   | date        | YES  |     | NULL    |                |
+| death   | date        | YES  |     | NULL    |                |
+| petID   | int         | NO   | PRI | NULL    | auto_increment |
+| ownerID | int         | YES  | MUL | NULL    |                |
++---------+-------------+------+-----+---------+----------------+

@@ -1,0 +1,50 @@
+a) Tulosta DVD-elokuvien kielet (language) aakkosjärjestyksessä
+SELECT * FROM language;
++-------------+----------+---------------------+
+| language_id | name     | last_update         |
++-------------+----------+---------------------+
+|           1 | English  | 2006-02-15 05:02:19 |
+|           2 | Italian  | 2006-02-15 05:02:19 |
+|           3 | Japanese | 2006-02-15 05:02:19 |
+|           4 | Mandarin | 2006-02-15 05:02:19 |
+
+b) Tulosta kaikkien niiden näyttelijöiden elokuvat, joiden sukunimi on Temple.
+SELECT title FROM film JOIN film_actor ON film.film_id = film_actor.film_id JOIN actor ON actor.actor_id = film_actor.actor_id WHERE last_name = 'Temple';
++-------------------------+
+| title                   |
++-------------------------+
+| ACADEMY DINOSAUR        |
+| ALABAMA DEVIL           |
+| BALLOON HOMEWARD        |
+| BEACH HEARTBREAKERS     |
+
+c) Tulosta elokuvassa "Ghost Groundhog" näytelleet näyttelijät.
+
+SELECT first_name, last_name FROM actor JOIN film_actor ON actor.actor_id = film_actor.actor_id JOIN film ON film_actor.film_id = film.film_id WHERE title = 'Ghost Groundhog';
++------------+-----------+
+| first_name | last_name |
++------------+-----------+
+| DAN        | HARRIS    |
+| KENNETH    | TORN      |
+| KEVIN      | GARLAND   |
+
+d) Montako kauhuelokuvaa ("Horror") tietokannassa on ?
+
+SELECT count(*) FROM film_category JOIN category ON category.category_id = film_category.category_id WHERE name = 'Horror';
++----------+
+| count(*) |
++----------+
+|       56 |
++----------+
+
+e) Tulosta kaikki kauhuelokuvat.
+
+SELECT title FROM film JOIN film_category ON film.film_id = film_category.film_id JOIN category ON category.category_id = film_category.category_id WHERE name = 'Horror';
++-----------------------------+
+| title                       |
++-----------------------------+
+| ACE GOLDFINGER              |
+| AFFAIR PREJUDICE            |
+| AIRPORT POLLOCK             |
+| ALABAMA DEVIL               |
+| ALI FOREVER                 |

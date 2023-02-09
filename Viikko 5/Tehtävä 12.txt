@@ -1,0 +1,101 @@
+12. Kirjastotietokannan testaus
+
+Tekijöiden lisäys
+
+INSERT INTO tekija VALUES (NULL,'Seppo','Mustaluoto');
+INSERT INTO tekija VALUES (NULL,'Ilkka','Remes');
+INSERT INTO tekija VALUES (NULL,'Riku','Rantala');
+INSERT INTO tekija VALUES (NULL,'Riku','Siivonen');
+
+SELECT * FROM tekija;
++----------+---------+------------+
+| idTekija | Etunimi | Sukunimi   |
++----------+---------+------------+
+|        8 | Seppo   | Mustaluoto |
+|        9 | Ilkka   | Remes      |
+|       10 | Riku    | Rantala    |
+|       11 | Riku    | Siivonen   |
++----------+---------+------------+
+
+Teosten lisäys
+
+INSERT INTO teos VALUES (NULL,'Kontakti','9789512423057');
+ERROR 1048 (23000): Column 'idTeos' cannot be null
+mysql> INSERT INTO teos VALUES (1,'Kontakti','9789512423057');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO teos VALUES (2,'Tornado','9789510487723');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> INSERT INTO teos VALUES (3,'Myyrmanni','123456789');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM teos;
++--------+-----------+---------------+
+| idTeos | Nimi      | ISBN          |
++--------+-----------+---------------+
+|      1 | Kontakti  | 9789512423057 |
+|      2 | Tornado   | 9789510487723 |
+|      3 | Myyrmanni | 123456789     |
++--------+-----------+---------------+
+
+Kirjojen lisäys
+
+INSERT INTO kirja VALUES (NULL,'5','A1');
+ERROR 1216 (23000): Cannot add or update a child row: a foreign key constraint fails
+mysql> INSERT INTO kirja VALUES (NULL,'1','A1');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO kirja VALUES (NULL,'2','F1');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO kirja VALUES (NULL,'2','F2');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> INSERT INTO kirja VALUES (NULL,'3','A8');
+
+SELECT * FROM kirja;
++---------+--------+-------------+
+| idKirja | idTeos | Hyllypaikka |
++---------+--------+-------------+
+|       9 |      1 | A1          |
+|      10 |      2 | F1          |
+|      11 |      2 | F2          |
+|      12 |      3 | A8          |
++---------+--------+-------------+
+
+Lainaustapahtuma
+
+INSERT INTO lainaus VALUES (NULL,CURDATE(),'2023-03-09','4','9',NULL);
+Query OK, 1 row affected (0.05 sec)
+
+mysql> SELECT * FROM lainaus;
++-----------+------------+-------------+-----------+---------+------------+
+| idLainaus | LainausPVM | PalautusPVM | idAsiakas | idKirja | Palautettu |
++-----------+------------+-------------+-----------+---------+------------+
+|         3 | 2023-02-09 | 2023-03-09  |         4 |       9 |       NULL |
++-----------+------------+-------------+-----------+---------+------------+
+
+Tekijät ja teokset
+
+SELECT Etunimi,Sukunimi,Nimi FROM tekija JOIN tekija_teos ON tekija.idTekija = tekija_teos.idTekija JOIN teos ON tekija_teos.idTeos=teos.idTeos;
++---------+------------+-----------+
+| Etunimi | Sukunimi   | Nimi      |
++---------+------------+-----------+
+| Seppo   | Mustaluoto | Kontakti  |
+| Ilkka   | Remes      | Tornado   |
+| Riku    | Rantala    | Myyrmanni |
+| Riku    | Siivonen   | Myyrmanni |
++---------+------------+-----------+
+
+Kirjat ja niiden hyllypaikka
+
+SELECT Nimi, Hyllypaikka FROM teos JOIN kirja ON teos.idTeos = kirja.idTeos;
++-----------+-------------+
+| Nimi      | Hyllypaikka |
++-----------+-------------+
+| Kontakti  | A1          |
+| Tornado   | F1          |
+| Tornado   | F2          |
+| Myyrmanni | A8          |
++-----------+-------------+

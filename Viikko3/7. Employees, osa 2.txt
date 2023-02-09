@@ -1,0 +1,111 @@
+a) Tulosta kymmenen aakkosjärjestyksessä ensimmäisen työntekijän tiedot sukunimen mukaan lajiteltuna.
+ Vihje: LIMIT rajoittaa tulostettavien tietojen määrän.
+
+SELECT * FROM employees ORDER BY last_name LIMIT 10;
++--------+------------+------------+-----------+--------+------------+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
++--------+------------+------------+-----------+--------+------------+
+|  11761 | 1964-07-17 | Bartek     | Aamodt    | M      | 1991-06-12 |
+|  15427 | 1959-03-06 | Aluzio     | Aamodt    | M      | 1985-03-03 |
+|  18182 | 1963-02-23 | Dekang     | Aamodt    | F      | 1988-05-25 |
+|  16572 | 1956-11-26 | Matt       | Aamodt    | M      | 1987-06-16 |
+
+
+b) Sama kuten edellä, mutta sukunimen JA etunimen mukaan lajiteltuna.
+
+SELECT * FROM employees ORDER BY last_name AND first_name LIMIT 10;
++--------+------------+------------+-----------+--------+------------+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
++--------+------------+------------+-----------+--------+------------+
+|  10001 | 1953-09-02 | Georgi     | Facello   | M      | 1986-06-26 |
+|  10002 | 1964-06-02 | Bezalel    | Simmel    | F      | 1985-11-21 |
+|  10003 | 1959-12-03 | Parto      | Bamford   | M      | 1986-08-28 |
+
+c) Tulosta viiden viimeksi palkatun työntekijän tiedot.
+
+SELECT * FROM employees ORDER BY hire_date DESC LIMIT 5;
++--------+------------+------------+-----------+--------+------------+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
++--------+------------+------------+-----------+--------+------------+
+| 463807 | 1964-06-12 | Bikash     | Covnot    | M      | 2000-01-28 |
+| 428377 | 1957-05-09 | Yucai      | Gerlach   | M      | 2000-01-23 |
+| 499553 | 1954-05-06 | Hideyuki   | Delgrande | F      | 2000-01-22 |
+| 222965 | 1959-08-07 | Volkmar    | Perko     | F      | 2000-01-13 |
+
+d) Kenellä on suurin palkka ? Tulosta etunimi, sukunimi ja palkka.
+
+SELECT first_name, last_name, salary FROM employees JOIN salaries ON employees.emp_no = salaries.emp_no 
+ORDER BY salary DESC LIMIT 1;
++------------+-----------+--------+
+| first_name | last_name | salary |
++------------+-----------+--------+
+| Tokuyasu   | Pesch     | 158220 |
++------------+-----------+--------+
+
+e) Kenellä on pienin palkka ? Tulosta etunimi, sukunimi ja palkka.
+
+SELECT first_name, last_name, salary FROM employees JOIN salaries ON employees.emp_no = salaries.emp_no 
+ORDER BY salary LIMIT 1;
++------------+-----------+--------+
+| first_name | last_name | salary |
++------------+-----------+--------+
+| Olivera    | Baek      |  38623 |
++------------+-----------+--------+
+
+
+f) Tulosta työntekijät (etunimi, sukunimi, palkka), jotka ansaitsevat yli 150000.
+
+SELECT first_name, last_name, salary FROM employees JOIN salaries ON employees.emp_no = salaries.emp_no WHERE salary > '150000';
++------------+-----------+--------+
+| first_name | last_name | salary |
++------------+-----------+--------+
+| Tokuyasu   | Pesch     | 151115 |
+| Tokuyasu   | Pesch     | 153166 |
+| Tokuyasu   | Pesch     | 153458 |
+| Tokuyasu   | Pesch     | 157821 |
+
+g) Kuinka monta työntekijää työskentelee myynnissä (Sales) ? Entä markkinoinnissa (Marketing) ?
+
+SELECT count(*) FROM dept_emp WHERE dept_no = 'd007';
++----------+
+| count(*) |
++----------+
+|    52245 |
++----------+
+
+SELECT count(*) FROM dept_emp WHERE dept_no = 'd001';
++----------+
+| count(*) |
++----------+
+|    20211 |
++----------+
+
+h) Tulosta kaikkien osastonjohtajien (Department Managers) etunimi, sukunimi ja osasto, jolla työskentelee.
+
+SELECT first_name, last_name, dept_name FROM employees JOIN dept_manager ON employees.emp_no = dept_manager.emp_no JOIN 
+departments ON dept_manager.dept_no = departments.dept_no;
++-------------+--------------+--------------------+
+| first_name  | last_name    | dept_name          |
++-------------+--------------+--------------------+
+| Margareta   | Markovitch   | Marketing          |
+| Vishwani    | Minakawa     | Marketing          |
+| Ebru        | Alpin        | Finance            |
+| Isamu       | Legleitner   | Finance            |
+
+i) Mikä on myynnissä työskentelevien keskipalkka ? Entä markkinoinnissa ?
+
+SELECT AVG(salary) FROM salaries JOIN dept_manager ON salaries.emp_no = dept_manager.emp_no JOIN departments on dept_manager.dept_no = 
+departments.dept_no JOIN dept_emp ON salaries.emp_no = dept_emp.emp_no WHERE dept_name = 'Sales';
++-------------+
+| AVG(salary) |
++-------------+
+|  85738.7647 |
++-------------+
+
+SELECT AVG(salary) FROM salaries JOIN dept_manager ON salaries.emp_no = dept_manager.emp_no JOIN departments on dept_manager.dept_no = 
+departments.dept_no JOIN dept_emp ON salaries.emp_no = dept_emp.emp_no WHERE dept_name = 'Marketing';
++-------------+
+| AVG(salary) |
++-------------+
+|  88371.6857 |
++-------------+

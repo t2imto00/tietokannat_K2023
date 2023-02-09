@@ -1,0 +1,45 @@
+1) Tulosta kaikki opiskelijat, joilla on tietokannassa hylätty arvosana
+
+SELECT Etunimi,Sukunimi FROM Opiskelija JOIN Arviointi ON Arviointi.idOpiskelija = Opiskelija.idOpiskelija WHERE Arvosana = 0;
++---------+----------+
+| Etunimi | Sukunimi |
++---------+----------+
+| Iines   | Ankka    |
+| Iines   | Ankka    |
++---------+----------+
+
+2) Tulosta kaikki Fysiikka 3-kurssin hyväksytysti suorittaneet
+
+SELECT Etunimi,Sukunimi FROM Opiskelija JOIN Arviointi ON Arviointi.idOpiskelija = Opiskelija.idOpiskelija WHERE Arvosana > 0 AND idOpintojakso = 6;
++---------+----------+
+| Etunimi | Sukunimi |
++---------+----------+
+| Mikki   | Hiiri    |
++---------+----------+
+
+3) Mille kursseille Mikki on osallistunut ?
+
+SELECT Nimi FROM Opintojakso JOIN Arviointi ON Arviointi.idOpintojakso = Opintojakso.idOpintojakso WHERE idOpiskelija = 4;
++-------------+
+| Nimi        |
++-------------+
+| Tietokannat |
+| Fysiikka 3  |
++-------------+
+
+4) Mikä on Akun opintosuoritusten keskiarvo ?
+
+SELECT AVG(Arvosana) FROM Arviointi JOIN Opiskelija ON Arviointi.idOpiskelija = Opiskelija.idOpiskelija WHERE Opiskelija.idOpiskelija = 1;
++---------------+
+| AVG(Arvosana) |
++---------------+
+|        3.0000 |
++---------------+
+
+5) Millä opintojaksoilla ei ole yhtään suoritusmerkintää ? (Vihje: Tarvitset tässä left tai right joinia...)
+SELECT Nimi, Arvosana FROM Opintojakso LEFT JOIN Arviointi ON Opintojakso.idOpintojakso = Arviointi.idOpintojakso WHERE arvosana is NULL;
++---------------+----------+
+| Nimi          | Arvosana |
++---------------+----------+
+| Ruotsin kieli |     NULL |
++---------------+----------+
