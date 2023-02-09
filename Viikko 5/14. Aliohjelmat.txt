@@ -1,0 +1,81 @@
+d) Tee opintorekisteritietokantaan aliohjelma, joka lisää uuden opintosuorituksen. Syötteeksi annetaan opiskelijan etunimi, 
+sukunimi, kurssikoodi ja arvosana. Aliohjelman pitää tarkistaa, että opiskelija ja opintojakso ovat olemassa 
+ja että arvosana on välillä 0 - 5.
+
+
+Suorituksen lisäys
+
+CALL LisaaSuoritus('Iines','Ankka','ino2234',3);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM suoritus;
++----------+---------+---------------------------+----------+
+| Sukunimi | Etunimi | Nimi                      | Arvosana |
++----------+---------+---------------------------+----------+
+| Ankka    | Iines   | Johdatus ohjelmointiin    |        3 |
+
+
+Syötteen tarkistus
+
+ CALL LisaaSuoritus('Iines','Ankka','ino2234',6);
++---------------------------------+
+| Arvosana tulee olla valilla 0-5 |
++---------------------------------+
+| Arvosana tulee olla valilla 0-5 |
++---------------------------------+
+1 row in set (0.00 sec)
+
+
+CALL LisaaSuoritus('Iines','Ankka','KLM',6);
++---------------------+
+| Opintojaksoa ei ole |
++---------------------+
+| Opintojaksoa ei ole |
++---------------------+
+1 row in set (0.00 sec)
+
+
+CALL LisaaSuoritus('Iines','Aku','YNG22229',2);
++--------------------+
+| Opiskelijaa ei ole |
++--------------------+
+| Opiskelijaa ei ole |
++--------------------+
+
+
+Aliohjelmankoodi alla
+
+---------------------------------------------------------------------------------
+
+CREATE PROCEDURE `LisaaSuoritus` (
+IN En VARCHAR(45),
+IN Sn VARCHAR(45),
+IN KK VARCHAR(45),
+IN Arvos INT
+)
+Aliohjelma:BEGIN
+declare OpiskID INT DEFAULT 0;
+declare OpjaksoID INT DEFAULT 0;
+declare ArvosID INT DEFAULT 0;
+
+SELECT idOpiskelija INTO OpiskID FROM Opiskelija WHERE Etunimi=En AND Sukunimi=Sn;
+IF OpiskID=0 then 
+     SELECT 'Opiskelijaa ei ole';
+     LEAVE Aliohjelma;
+END IF;
+
+SELECT idOpintojakso INTO OpjaksoID FROM Opintojakso WHERE Koodi=KK;
+IF OpjaksoID=0 then 
+     SELECT 'Opintojaksoa ei ole';
+     LEAVE Aliohjelma;
+END IF;
+
+SELECT idArviointi INTO ArvosID FROM Arviointi WHERE Arvosana=Arvos;
+IF Arvos>5 then
+	SELECT 'Arvosana tulee olla valilla 0-5';
+    LEAVE Aliohjelma;
+END IF; 
+   
+INSERT INTO Arviointi VALUES(NULL,Arvos,CURDATE(),OpiskID,OpjaksoID);
+
+END
